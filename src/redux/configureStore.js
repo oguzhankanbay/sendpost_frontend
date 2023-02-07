@@ -9,6 +9,25 @@ const loggedInState={
     password:"12345"
 }
 const configureStore=()=>{
- return createStore(authReducers, loggedInState,  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());  
+    const auth=localStorage.getItem('auth')
+    const defaultState={
+        isLoggedIn:false,
+        username:undefined,
+        displayName:undefined,
+        image:undefined,
+        password:undefined
+    }
+    if (auth) {
+        try {
+            defaultState=JSON.parse(auth)
+        } catch (error) {
+            
+        }
+        
+    }
+const store=  createStore(authReducers, loggedInState,  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());  
+store.subscribe(()=>{
+    localStorage.setItem('auth',JSON.stringfy(store.loggedInState))
+})
 }
 export default configureStore;
